@@ -50,7 +50,7 @@ const CarbonTracker = () => {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'X-goog-api-key': 'AIzaSyDolkqsnwcFdx9lJ8WPZZezC7t7wnCLfFI'
+                'X-goog-api-key': 'AIzaSyC5ZTrj0768WpfDlthAAsvBOmJTy3xFkYw'
               },
               body: JSON.stringify({
                 contents: [{
@@ -82,7 +82,7 @@ const CarbonTracker = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-goog-api-key': 'AIzaSyDolkqsnwcFdx9lJ8WPZZezC7t7wnCLfFI'
+            'X-goog-api-key': 'AIzaSyC5ZTrj0768WpfDlthAAsvBOmJTy3xFkYw'
           },
           body: JSON.stringify({
             contents: [{

@@ -31,59 +31,76 @@ const AQIInsights = () => {
   const generateInsights = async () => {
     if (!locationData) return;
 
-    const geminiResponse = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-goog-api-key': 'AIzaSyDolkqsnwcFdx9lJ8WPZZezC7t7wnCLfFI'
-      },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: `Based on AQI data for ${selectedLocation}: AQI=${locationData.aqi}, PM2.5=${locationData.iaqi?.pm25?.v || 0}, PM10=${locationData.iaqi?.pm10?.v || 0}, NO2=${locationData.iaqi?.no2?.v || 0}, O3=${locationData.iaqi?.o3?.v || 0}. 
-            
-            Please provide:
-            1. Top 5 plant species specifically effective for this pollution level
-            2. Pollution trend analysis
-            3. Weekly air quality tips
-            4. CO2 offset recommendations
-            
-            Format as JSON with keys: plantSpecies (array with name, effectiveness, description), trendAnalysis (string), weeklyTips (array), offsetRecommendations (array)`
-          }]
-        }]
-      })
-    });
+    // Fallback data to use if API fails
+    const fallbackData = {
+      plantSpecies: [
+        { name: "Neem (Azadirachta indica)", effectiveness: "High", description: "Excellent for NO2 and PM2.5 absorption" },
+        { name: "Peepal (Ficus religiosa)", effectiveness: "High", description: "24/7 oxygen production, CO2 absorption" },
+        { name: "Ashoka (Saraca asoca)", effectiveness: "Medium", description: "Good for urban pollution and noise reduction" },
+        { name: "Arjun (Terminalia arjuna)", effectiveness: "High", description: "Effective against particulate matter" },
+        { name: "Jamun (Syzygium cumini)", effectiveness: "Medium", description: "Natural air purifier with fruit benefits" }
+      ],
+      trendAnalysis: `Current AQI of ${locationData.aqi} indicates ${locationData.aqi <= 50 ? 'good' : locationData.aqi <= 100 ? 'moderate' : locationData.aqi <= 200 ? 'unhealthy' : 'hazardous'} air quality. Seasonal patterns indicate higher pollution during winter months due to stubble burning and reduced wind circulation.`,
+      weeklyTips: [
+        "Avoid outdoor activities during peak pollution hours (6-10 AM, 6-9 PM)",
+        "Use air purifiers indoors during high AQI days",
+        "Plant recommended species in your garden or balcony",
+        "Wear N95 masks when AQI exceeds 100"
+      ],
+      offsetRecommendations: [
+        "Plant 2-3 recommended trees to offset daily CO2 emissions",
+        "Use public transport or electric vehicles",
+        "Install solar panels if possible",
+        "Reduce energy consumption by 20%"
+      ]
+    };
 
-    const result = await geminiResponse.json();
-    const content = result.candidates[0].content.parts[0].text;
-    
     try {
-      const parsedData = JSON.parse(content);
+      const geminiResponse = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-goog-api-key': 'AIzaSyC5ZTrj0768WpfDlthAAsvBOmJTy3xFkYw'
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: `Based on AQI data for ${selectedLocation}: AQI=${locationData.aqi}, PM2.5=${locationData.iaqi?.pm25?.v || 0}, PM10=${locationData.iaqi?.pm10?.v || 0}, NO2=${locationData.iaqi?.no2?.v || 0}, O3=${locationData.iaqi?.o3?.v || 0}. 
+              
+              Please provide:
+              1. Top 5 plant species specifically effective for this pollution level
+              2. Pollution trend analysis
+              3. Weekly air quality tips
+              4. CO2 offset recommendations
+              
+              Format as JSON with keys: plantSpecies (array with name, effectiveness, description), trendAnalysis (string), weeklyTips (array), offsetRecommendations (array)`
+            }]
+          }]
+        })
+      });
+
+      if (!geminiResponse.ok) {
+        console.warn('Gemini API returned error, using fallback data');
+        setPredictions(fallbackData);
+        return;
+      }
+
+      const result = await geminiResponse.json();
+      
+      if (!result.candidates || !result.candidates[0]?.content?.parts?.[0]?.text) {
+        console.warn('Invalid Gemini response format, using fallback data');
+        setPredictions(fallbackData);
+        return;
+      }
+
+      const content = result.candidates[0].content.parts[0].text;
+      // Clean markdown code blocks if present
+      const cleanedContent = content.replace(/```json|```/g, '').trim();
+      const parsedData = JSON.parse(cleanedContent);
       setPredictions(parsedData);
     } catch (error) {
-      // Fallback data if parsing fails
-      setPredictions({
-        plantSpecies: [
-          { name: "Neem (Azadirachta indica)", effectiveness: "High", description: "Excellent for NO2 and PM2.5 absorption" },
-          { name: "Peepal (Ficus religiosa)", effectiveness: "High", description: "24/7 oxygen production, CO2 absorption" },
-          { name: "Ashoka (Saraca asoca)", effectiveness: "Medium", description: "Good for urban pollution and noise reduction" },
-          { name: "Arjun (Terminalia arjuna)", effectiveness: "High", description: "Effective against particulate matter" },
-          { name: "Jamun (Syzygium cumini)", effectiveness: "Medium", description: "Natural air purifier with fruit benefits" }
-        ],
-        trendAnalysis: "Current pollution levels suggest moderate air quality. Seasonal patterns indicate higher pollution during winter months.",
-        weeklyTips: [
-          "Avoid outdoor activities during peak pollution hours (6-10 AM, 6-9 PM)",
-          "Use air purifiers indoors during high AQI days",
-          "Plant recommended species in your garden or balcony",
-          "Wear N95 masks when AQI exceeds 100"
-        ],
-        offsetRecommendations: [
-          "Plant 2-3 recommended trees to offset daily CO2 emissions",
-          "Use public transport or electric vehicles",
-          "Install solar panels if possible",
-          "Reduce energy consumption by 20%"
-        ]
-      });
+      console.warn('Error generating insights, using fallback data:', error);
+      setPredictions(fallbackData);
     }
   };
 

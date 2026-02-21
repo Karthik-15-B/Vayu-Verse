@@ -51,7 +51,7 @@ const CitizenSupport = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-goog-api-key': 'AIzaSyDolkqsnwcFdx9lJ8WPZZezC7t7wnCLfFI'
+            'X-goog-api-key': 'AIzaSyC5ZTrj0768WpfDlthAAsvBOmJTy3xFkYw'
           },
           body: JSON.stringify({
             contents: [{
@@ -83,11 +83,11 @@ const CitizenSupport = () => {
         setSourceBreakdown(source);
       } else {
         // Not traveling, just show Gemini advice
-        const geminiRes = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro:generateContent', {
+        const geminiRes = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-goog-api-key': 'AIzaSyDolkqsnwcFdx9lJ8WPZZezC7t7wnCLfFI'
+            'X-goog-api-key': 'AIzaSyCU6OPwSnSJxPgBzcQa7ilFRICXTRzh1mo'
           },
           body: JSON.stringify({
             contents: [{
