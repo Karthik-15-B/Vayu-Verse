@@ -1,4 +1,7 @@
-# SMART INDIA HACKATHON 2025 Project 🇮🇳
+# TECH SAVISHKAAR 4.0 🚀
+## Team Rudra
+
+---
 
 ## Problem Statement
 
@@ -6,8 +9,8 @@
 
 Delhi-NCR pollution is episodic and seasonal, driven by multiple overlapping factors: crop stubble burning in Punjab/Haryana, traffic congestion, industrial activity, and meteorological conditions. Current forecasting tools lack source-level granularity, citizen-level accessibility, and real-time policy feedback.
 
-## Provided By
-**Smart India Hackathon 2025 - Environmental Monitoring Division**
+## Presented By
+**Team Rudra | TECH SAVISHKAAR 4.0 Competition**
 
 ## Expected Outcomes
 
@@ -156,7 +159,7 @@ npm run build
 - **Exportable Reports** for research and advocacy
 - **Multi-Model Predictions** for academic validation
 
-## 🏆 Smart India Hackathon 2025 Compliance
+## 🏆 TECH SAVISHKAAR 4.0 Compliance
 
 ✅ **Problem Statement Fully Addressed**
 
@@ -177,6 +180,6 @@ npm run build
 ---
 
 <div align="center">
-  <strong>Developed for Smart India Hackathon 2025</strong><br>
+  <strong>Developed by Team Rudra for TECH SAVISHKAAR 4.0</strong><br>
   Making Delhi-NCR's air quality data accessible, actionable, and impactful 🌱
 </div>
